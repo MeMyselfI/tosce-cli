@@ -128,7 +128,8 @@
                                 <buildArg>--initialize-at-build-time=com.fasterxml.jackson</buildArg>
                                 <buildArg>-H:ReflectionConfigurationFiles=${project.basedir}/src/main/resources/META-INF/native-image/reflect-config.json</buildArg>
                                 <buildArg>--gc=epsilon</buildArg>
-                                <buildArg>-Os</buildArg>
+                                <buildArg>-O2</buildArg>
+                                <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
                                 <buildArg>-H:+RemoveUnusedSymbols</buildArg>
                             </buildArgs>
                         </configuration>
