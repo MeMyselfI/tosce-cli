@@ -31,16 +31,16 @@ mv tosce-linux-amd64 /usr/local/bin/tosce
 
 ```bash
 # Save credentials (writes to ~/.tosce/config)
-tosce login --url https://192.168.1.10:8443 --user admin --pass secret --insecure
+tosce login --url https://127.0.0.1:8443 --user admin --pass secret --insecure
 
 # List all OSCEs — JSON (default, ideal for AI agents)
 tosce osce list
 
 # List all OSCEs — ad-hoc without saved credentials
-tosce --url https://192.168.1.10:8443 --user admin --pass secret --insecure osce list
+tosce --url https://127.0.0.1:8443 --user admin --pass secret --insecure osce list
 
 # List all OSCEs — human-readable table
-tosce --url https://192.168.1.10:8443 --user admin --pass secret --insecure --table osce list
+tosce --url https://127.0.0.1:8443 --user admin --pass secret --insecure --table osce list
 
 # Pretty-print JSON output
 tosce osce list --pretty
@@ -68,7 +68,7 @@ Credentials are resolved in this priority order (highest first):
 
 ```bash
 # Using environment variables (ideal for CI/AI agents)
-export TOSCE_URL=https://osce.example.com:8443
+export TOSCE_URL=https://127.0.0.1:8443
 export TOSCE_USER=admin
 export TOSCE_PASSWORD=secret
 tosce osce list
