@@ -51,6 +51,19 @@ jobs:
         run: mv target\tosce.exe target\${{ matrix.asset_name }}
         shell: cmd
 
+      - name: Install UPX (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y upx
+
+      - name: Install UPX (Windows)
+        if: runner.os == 'Windows'
+        run: choco install upx -y --no-progress
+        shell: cmd
+
+      - name: Compress with UPX (Linux/Windows)
+        if: runner.os != 'macOS'
+        run: upx --best target/${{ matrix.asset_name }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
