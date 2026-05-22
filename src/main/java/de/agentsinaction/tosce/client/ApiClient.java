@@ -72,7 +72,7 @@ public class ApiClient {
                 .header("Accept", "application/json")
                 .GET()
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = send(req, HttpResponse.BodyHandlers.ofString());
         checkStatus(resp.statusCode(), resp.body());
         return mapper.readTree(resp.body());
     }
@@ -83,7 +83,7 @@ public class ApiClient {
                 .header("Authorization", authHeader())
                 .GET()
                 .build();
-        HttpResponse<byte[]> resp = http.send(req, HttpResponse.BodyHandlers.ofByteArray());
+        HttpResponse<byte[]> resp = send(req, HttpResponse.BodyHandlers.ofByteArray());
         checkStatus(resp.statusCode(), "(binary)");
         return resp.body();
     }
@@ -97,7 +97,7 @@ public class ApiClient {
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = send(req, HttpResponse.BodyHandlers.ofString());
         checkStatus(resp.statusCode(), resp.body());
         return mapper.readTree(resp.body());
     }
@@ -111,7 +111,7 @@ public class ApiClient {
                 .header("Accept", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = send(req, HttpResponse.BodyHandlers.ofString());
         checkStatus(resp.statusCode(), resp.body());
         return mapper.readTree(resp.body());
     }
@@ -123,7 +123,7 @@ public class ApiClient {
                 .header("Accept", "application/json")
                 .DELETE()
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = send(req, HttpResponse.BodyHandlers.ofString());
         checkStatus(resp.statusCode(), resp.body());
         return mapper.readTree(resp.body());
     }
@@ -138,7 +138,7 @@ public class ApiClient {
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofByteArray(body))
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = send(req, HttpResponse.BodyHandlers.ofString());
         // multipart responses may return HTML with embedded JSON or plain JSON
         String responseBody = resp.body();
         // try parsing as JSON directly
@@ -178,6 +178,32 @@ public class ApiClient {
         }
         out.write(("--" + boundary + "--\r\n").getBytes());
         return out.toByteArray();
+    }
+
+    private <T> HttpResponse<T> send(HttpRequest req, HttpResponse.BodyHandler<T> handler)
+            throws IOException, InterruptedException {
+        try {
+            return http.send(req, handler);
+        } catch (javax.net.ssl.SSLHandshakeException e) {
+            throw new IOException(
+                "TLS certificate error connecting to " + config.getUrl() + ": " + e.getMessage() + "\n" +
+                "The server may be using a self-signed certificate. " +
+                "Retry with --insecure (-k) to accept it.", e);
+        } catch (java.net.ConnectException e) {
+            throw new IOException(
+                "Cannot connect to server at " + config.getUrl() + "\n" +
+                "Make sure the server is running and the URL is correct (check 'tosce login').", e);
+        } catch (IOException e) {
+            // catch remaining IO errors (e.g. general SSL errors) and check for SSL cause
+            Throwable cause = e.getCause();
+            if (cause instanceof javax.net.ssl.SSLException) {
+                throw new IOException(
+                    "TLS error connecting to " + config.getUrl() + ": " + cause.getMessage() + "\n" +
+                    "The server may be using a self-signed certificate. " +
+                    "Retry with --insecure (-k) to accept it.", e);
+            }
+            throw e;
+        }
     }
 
     private void checkStatus(int status, String body) throws IOException {
