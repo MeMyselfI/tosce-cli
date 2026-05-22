@@ -1,5 +1,10 @@
 # tOSCE CLI
 
+> **⚠️ BETA SOFTWARE — USE AT YOUR OWN RISK**
+>
+> This CLI is in early beta. It may contain bugs, produce unexpected results, or cause data loss when interacting with your tOSCE server. It has not been tested against all server versions or configurations.
+> **Do not use in production exam environments without thorough testing.** No warranties, express or implied, are provided. Use entirely at your own risk.
+
 A command-line interface for the **tOSCE server** — a platform for conducting OSCE (Objective Structured Clinical Examination) sessions. Designed for automation and AI agent use: all output is JSON.
 
 ## Installation

@@ -13,9 +13,11 @@ import java.util.concurrent.Callable;
 
 @Command(
     name = "tosce",
-    version = "tosce-cli 1.0.0",
+    version = "tosce-cli 1.0.0-beta",
     mixinStandardHelpOptions = true,
-    description = "CLI for the tOSCE OSCE exam server. Output is JSON by default.",
+    description = {"CLI for the tOSCE OSCE exam server. Output is JSON by default.",
+                   "@|bold,red WARNING: BETA SOFTWARE — USE AT YOUR OWN RISK.|@",
+                   "May cause data loss. Not for use in production without testing."},
     subcommands = {
         LoginCommand.class,
         OsceCommand.class,
