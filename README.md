@@ -33,14 +33,29 @@ mv tosce-linux-amd64 /usr/local/bin/tosce
 # Save credentials (writes to ~/.tosce/config)
 tosce login --url https://192.168.1.10:8443 --user admin --pass secret --insecure
 
-# List all OSCEs
+# List all OSCEs — JSON (default, ideal for AI agents)
 tosce osce list
+
+# List all OSCEs — ad-hoc without saved credentials
+tosce --url https://192.168.1.10:8443 --user admin --pass secret --insecure osce list
+
+# List all OSCEs — human-readable table
+tosce --url https://192.168.1.10:8443 --user admin --pass secret --insecure --table osce list
 
 # Pretty-print JSON output
 tosce osce list --pretty
 
 # Get a specific OSCE
 tosce osce get 42
+```
+
+Example table output:
+
+```
+| ID   | NAME                        | DATE              | STATUS   |
++------+-----------------------------+-------------------+----------+
+| 1    | OSCE Sommersemester 2025    | 20250601090000000 | active   |
+| 2    | OSCE Wintersemester 2025/26 | 20251201090000000 | planned  |
 ```
 
 ## Authentication
@@ -141,6 +156,7 @@ tosce server letsencrypt # Refresh Let's Encrypt certificate
 | `--pass, -p PASS` | Password |
 | `--insecure, -k` | Skip TLS certificate verification |
 | `--pretty` | Pretty-print JSON output |
+| `--table` | Render result as human-readable table |
 | `--help` | Show help |
 | `--version` | Show version |
 
