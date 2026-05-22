@@ -9,22 +9,24 @@ A command-line interface for the **tOSCE server** — a platform for conducting 
 
 ## Installation
 
-Releases (native binaries, kein JVM erforderlich) sind hier zu finden:
+Native binaries (no JVM required) — permanent direct-download links, always pointing to the latest release:
 
-**https://github.com/MeMyselfI/tosce-cli/releases**
+| Platform | Permanent URL |
+|----------|---------------|
+| Linux (x86_64) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64 |
+| macOS (Apple Silicon) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64 |
+| Windows (x86_64) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe |
 
-Download the latest binary for your platform from the [Releases](https://github.com/MeMyselfI/tosce-cli/releases) page:
-
-| Platform | Binary |
-|----------|--------|
-| Linux (x86_64) | `tosce-linux-amd64` |
-| macOS (Apple Silicon) | `tosce-macos-arm64` |
-| Windows (x86_64) | `tosce-windows-amd64.exe` |
+All releases: https://github.com/MeMyselfI/tosce-cli/releases
 
 ```bash
 # Linux / macOS
-chmod +x tosce-linux-amd64
-mv tosce-linux-amd64 /usr/local/bin/tosce
+curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64 -o tosce
+chmod +x tosce
+mv tosce /usr/local/bin/tosce
+
+# Windows (PowerShell)
+Invoke-WebRequest https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe -OutFile tosce.exe
 ```
 
 ## Quick Start
