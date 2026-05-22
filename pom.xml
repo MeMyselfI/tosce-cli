@@ -6,7 +6,7 @@
 
     <groupId>de.agentsinaction</groupId>
     <artifactId>tosce-cli</artifactId>
-    <version>1.0.0-beta</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
 
     <name>tOSCE CLI</name>
