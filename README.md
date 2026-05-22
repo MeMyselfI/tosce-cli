@@ -9,7 +9,11 @@ A command-line interface for the **tOSCE server** — a platform for conducting 
 
 ## Installation
 
-Download the latest binary for your platform from the [Releases](../../releases) page:
+Releases (native binaries, kein JVM erforderlich) sind hier zu finden:
+
+**https://github.com/MeMyselfI/tosce-cli/releases**
+
+Download the latest binary for your platform from the [Releases](https://github.com/MeMyselfI/tosce-cli/releases) page:
 
 | Platform | Binary |
 |----------|--------|
