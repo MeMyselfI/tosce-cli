@@ -13,16 +13,22 @@ Native binaries (no JVM required) — permanent direct-download links, always po
 
 | Platform | CLI (Terminal) | GUI (Doppelklick) |
 |----------|---------------|-------------------|
-| Linux (x86_64) | [tosce-linux-amd64](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64) | — |
+| Linux (x86_64) | [tosce-linux-amd64](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64) | [tosce.desktop](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce.desktop) |
 | macOS (Apple Silicon) | [tosce-macos-arm64](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64) | [tosce-macos-arm64.app.zip](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64.app.zip) |
 | Windows (x86_64) | [tosce-windows-amd64.exe](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe) | selbe .exe |
 
 All releases: https://github.com/MeMyselfI/tosce-cli/releases
 
 ```bash
-# Linux
+# Linux — CLI
 curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64 -o tosce
 chmod +x tosce && mv tosce /usr/local/bin/tosce
+
+# Linux — GUI per Doppelklick (Desktop-Integration)
+curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce.desktop -o tosce.desktop
+cp tosce.desktop ~/.local/share/applications/
+# Danach im App-Menü oder Dateimanager per Doppelklick startbar.
+# Alternativ direkt aus dem Terminal: tosce --gui
 
 # macOS — CLI (Terminal)
 curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64 -o tosce
@@ -34,9 +40,10 @@ chmod +x tosce && mv tosce /usr/local/bin/tosce
 
 # Windows (PowerShell)
 Invoke-WebRequest https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe -OutFile tosce.exe
+# Doppelklick auf die .exe öffnet die GUI direkt.
 ```
 
-> **Tipp:** Die GUI lässt sich auch aus dem Terminal starten: `tosce --gui`
+> **Tipp:** Die GUI lässt sich auf allen Plattformen auch direkt aus dem Terminal starten: `tosce --gui`
 
 ## Quick Start
 
