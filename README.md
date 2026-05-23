@@ -11,23 +11,32 @@ A command-line interface for the **tOSCE server** — a platform for conducting 
 
 Native binaries (no JVM required) — permanent direct-download links, always pointing to the latest release:
 
-| Platform | Permanent URL |
-|----------|---------------|
-| Linux (x86_64) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64 |
-| macOS (Apple Silicon) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64 |
-| Windows (x86_64) | https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe |
+| Platform | CLI (Terminal) | GUI (Doppelklick) |
+|----------|---------------|-------------------|
+| Linux (x86_64) | [tosce-linux-amd64](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64) | — |
+| macOS (Apple Silicon) | [tosce-macos-arm64](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64) | [tosce-macos-arm64.app.zip](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64.app.zip) |
+| Windows (x86_64) | [tosce-windows-amd64.exe](https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe) | selbe .exe |
 
 All releases: https://github.com/MeMyselfI/tosce-cli/releases
 
 ```bash
-# Linux / macOS
+# Linux
 curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-linux-amd64 -o tosce
-chmod +x tosce
-mv tosce /usr/local/bin/tosce
+chmod +x tosce && mv tosce /usr/local/bin/tosce
+
+# macOS — CLI (Terminal)
+curl -fsSL https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-macos-arm64 -o tosce
+chmod +x tosce && mv tosce /usr/local/bin/tosce
+
+# macOS — GUI (Doppelklick im Finder)
+# tosce-macos-arm64.app.zip herunterladen, entpacken, "tOSCE CLI.app" in Programme legen.
+# Beim ersten Start: Rechtsklick → Öffnen → Öffnen bestätigen (Gatekeeper-Einmalfreigabe).
 
 # Windows (PowerShell)
 Invoke-WebRequest https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe -OutFile tosce.exe
 ```
+
+> **Tipp:** Die GUI lässt sich auch aus dem Terminal starten: `tosce --gui`
 
 ## Quick Start
 
