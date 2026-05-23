@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 public class GuiServer {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static volatile long lastPing = System.currentTimeMillis();
+    private static final long PING_TIMEOUT_MS = 15_000;
 
     public static void start(String exePath) throws Exception {
         int port;
@@ -35,6 +37,7 @@ public class GuiServer {
         server.createContext("/config",      ex -> serveConfig(ex));
         server.createContext("/run",          ex -> handleRun(ex, exePath));
         server.createContext("/save-config",  ex -> handleSaveConfig(ex));
+        server.createContext("/ping",         ex -> { lastPing = System.currentTimeMillis(); respond(ex, 200, "{\"ok\":true}"); });
         server.createContext("/shutdown",     ex -> {
             respond(ex, 200, "{\"ok\":true}");
             server.stop(0);
@@ -42,6 +45,20 @@ public class GuiServer {
         });
 
         server.start();
+
+        // Watchdog: exit if no ping for 15 seconds (browser tab closed)
+        Thread watchdog = new Thread(() -> {
+            while (true) {
+                try { Thread.sleep(5_000); } catch (InterruptedException e) { return; }
+                if (System.currentTimeMillis() - lastPing > PING_TIMEOUT_MS) {
+                    server.stop(0);
+                    System.exit(0);
+                }
+            }
+        });
+        watchdog.setDaemon(true);
+        watchdog.start();
+
         openBrowser("http://localhost:" + port);
 
         Thread.currentThread().join();

@@ -165,6 +165,8 @@
   </div>
 
   <script>
+    setInterval(() => { fetch('/ping', { method: 'POST' }).catch(() => {}); }, 5000);
+
     fetch('/config').then(r => r.json()).then(cfg => {
       if (cfg.url)  document.getElementById('url').value = cfg.url;
       if (cfg.user) document.getElementById('user').value = cfg.user;

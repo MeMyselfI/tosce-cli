@@ -36,7 +36,9 @@ chmod +x tosce && mv tosce /usr/local/bin/tosce
 
 # macOS — GUI (Doppelklick im Finder)
 # tosce-macos-arm64.app.zip herunterladen, entpacken, "tOSCE CLI.app" in Programme legen.
-# Beim ersten Start: Rechtsklick → Öffnen → Öffnen bestätigen (Gatekeeper-Einmalfreigabe).
+# Falls macOS "beschädigt" meldet, einmalig im Terminal ausführen:
+xattr -cr "/Applications/tOSCE CLI.app"
+# Danach: Rechtsklick → Öffnen → Öffnen bestätigen (Gatekeeper-Einmalfreigabe).
 
 # Windows (PowerShell)
 Invoke-WebRequest https://github.com/MeMyselfI/tosce-cli/releases/latest/download/tosce-windows-amd64.exe -OutFile tosce.exe
