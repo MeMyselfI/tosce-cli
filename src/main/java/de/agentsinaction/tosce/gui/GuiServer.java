@@ -100,7 +100,7 @@ public class GuiServer {
         addArg(args, "--user", req, "user");
         addArg(args, "--pass", req, "pass");
         if (req.path("insecure").asBoolean(false)) args.add("--insecure");
-        args.add("--pretty");
+        args.add("--table");
 
         String command = req.path("command").asText("").trim();
         if (!command.isEmpty()) args.addAll(splitArgs(command));
@@ -143,8 +143,7 @@ public class GuiServer {
     private static void addArg(List<String> args, String flag, JsonNode req, String field) {
         String val = req.path(field).asText("").trim();
         if (!val.isEmpty()) {
-            args.add(flag);
-            args.add(val);
+            args.add(flag + "=" + val);
         }
     }
 
