@@ -3,10 +3,14 @@ package de.agentsinaction.tosce;
 import de.agentsinaction.tosce.gui.GuiServer;
 import picocli.CommandLine;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
-        // No terminal attached and no arguments → launched by double-click → GUI mode
-        if (System.console() == null && args.length == 0) {
+        // GUI mode: no terminal (double-click) OR explicit --gui flag
+        boolean guiMode = (System.console() == null && args.length == 0)
+                || Arrays.asList(args).contains("--gui");
+        if (guiMode) {
             String exe = ProcessHandle.current().info().command().orElse("");
             try {
                 GuiServer.start(exe);
