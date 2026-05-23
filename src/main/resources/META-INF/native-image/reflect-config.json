@@ -143,5 +143,10 @@
     "name": "com.fasterxml.jackson.databind.node.ArrayNode",
     "allDeclaredConstructors": true,
     "allPublicMethods": true
+  },
+  {
+    "name": "de.agentsinaction.tosce.gui.GuiServer",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
   }
 ]

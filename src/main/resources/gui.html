@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tOSCE CLI</title>
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --surface: #ffffff;
+      --border: #e4e4e7;
+      --accent: #2563eb;
+      --accent-h: #1d4ed8;
+      --text: #18181b;
+      --muted: #71717a;
+      --mono: ui-monospace, 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    header { margin-bottom: 20px; }
+    header h1 { font-size: 1.4rem; font-weight: 700; }
+    header p { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .field { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .field label { width: 90px; font-size: 0.88rem; font-weight: 500; flex-shrink: 0; }
+    .field input[type=text], .field input[type=url], .field input[type=password] {
+      flex: 1; padding: 7px 10px; border: 1px solid var(--border);
+      border-radius: 6px; font-size: 0.88rem; font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { outline: none; border-color: var(--accent); }
+    .checks { display: flex; gap: 18px; margin-top: 4px; padding-left: 100px; }
+    .checks label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer; }
+    .cmd-row { display: flex; gap: 8px; }
+    .cmd-row input {
+      flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.9rem; font-family: var(--mono);
+    }
+    .cmd-row input:focus { outline: none; border-color: var(--accent); }
+    .hint { font-size: 0.78rem; color: var(--muted); margin-top: 7px; }
+    button {
+      padding: 8px 18px; border: none; border-radius: 6px;
+      font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-run { background: var(--accent); color: #fff; min-width: 80px; }
+    .btn-run:hover { background: var(--accent-h); }
+    .btn-run:disabled { background: #93c5fd; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text); font-size: 0.82rem; padding: 6px 14px;
+    }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-stop { color: #b91c1c; border-color: #fca5a5; }
+    .btn-stop:hover { background: #fff1f2; }
+    .output-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+    }
+    .badge {
+      font-size: 0.75rem; font-weight: 600; padding: 3px 10px;
+      border-radius: 20px; display: none;
+    }
+    .badge.ok  { background: #dcfce7; color: #15803d; display: inline; }
+    .badge.err { background: #fee2e2; color: #b91c1c; display: inline; }
+    .badge.run { background: #fef9c3; color: #b45309; display: inline; }
+    #output {
+      background: #1a1a1a; color: #d4d4d4;
+      font-family: var(--mono); font-size: 0.82rem; line-height: 1.65;
+      padding: 14px 16px; border-radius: 7px;
+      white-space: pre-wrap; word-break: break-all;
+      min-height: 180px; max-height: 55vh; overflow-y: auto;
+    }
+    #output.err-out { color: #fca5a5; }
+    .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>tOSCE CLI</h1>
+    <p>GUI mode — the same binary also works as a CLI in a terminal</p>
+  </header>
+
+  <div class="card">
+    <div class="card-title">Connection</div>
+    <div class="field">
+      <label for="url">Server URL</label>
+      <input id="url" type="url" placeholder="https://127.0.0.1:8443">
+    </div>
+    <div class="field">
+      <label for="user">Username</label>
+      <input id="user" type="text" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="pass">Password</label>
+      <input id="pass" type="password" autocomplete="current-password">
+    </div>
+    <div class="checks">
+      <label><input id="insecure" type="checkbox"> Skip TLS verification (--insecure)</label>
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="saveConfig()">Save credentials</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Command</div>
+    <div class="cmd-row">
+      <input id="cmd" type="text" list="cmds" placeholder="osce list"
+             onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter')run()">
+      <button class="btn-run" id="run-btn" onclick="run()">Run</button>
+    </div>
+    <datalist id="cmds">
+      <option value="osce list">
+      <option value="osce get ">
+      <option value="osce create --data '{}'">
+      <option value="osce delete ">
+      <option value="osce export ">
+      <option value="osce result ">
+      <option value="osce phrases list">
+      <option value="examinee list">
+      <option value="examinee get ">
+      <option value="examinee create --data '{\"name\":\"\",\"firstname\":\"\"}'">
+      <option value="examinee delete ">
+      <option value="examiner list">
+      <option value="examiner get ">
+      <option value="actor list">
+      <option value="client list">
+      <option value="client remove-disconnected">
+      <option value="user list">
+      <option value="conf get">
+      <option value="server status">
+    </datalist>
+    <p class="hint">⌘/Ctrl + Enter to run · type any tOSCE CLI command</p>
+  </div>
+
+  <div class="card">
+    <div class="output-head">
+      <div class="card-title" style="margin:0">Output</div>
+      <span id="badge" class="badge"></span>
+    </div>
+    <pre id="output">Ready. Enter a command and click Run.</pre>
+    <div class="actions">
+      <button class="btn-ghost btn-stop" onclick="stopServer()">Stop server</button>
+    </div>
+  </div>
+
+  <script>
+    fetch('/config').then(r => r.json()).then(cfg => {
+      if (cfg.url)  document.getElementById('url').value = cfg.url;
+      if (cfg.user) document.getElementById('user').value = cfg.user;
+      if (cfg.insecure) document.getElementById('insecure').checked = true;
+    }).catch(() => {});
+
+    async function run() {
+      const btn  = document.getElementById('run-btn');
+      const out  = document.getElementById('output');
+      const badge = document.getElementById('badge');
+      const cmd  = document.getElementById('cmd').value.trim();
+      if (!cmd) return;
+
+      btn.disabled = true;
+      out.className = '';
+      out.textContent = 'Running…';
+      badge.className = 'badge run';
+      badge.textContent = 'Running';
+
+      try {
+        const resp = await fetch('/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url:      document.getElementById('url').value,
+            user:     document.getElementById('user').value,
+            pass:     document.getElementById('pass').value,
+            insecure: document.getElementById('insecure').checked,
+            command:  cmd
+          })
+        });
+        const result = await resp.json();
+        let display = result.output;
+        try { display = JSON.stringify(JSON.parse(display.trim()), null, 2); } catch(e) {}
+        out.textContent  = display;
+        out.className    = result.exitCode === 0 ? '' : 'err-out';
+        badge.className  = 'badge ' + (result.exitCode === 0 ? 'ok' : 'err');
+        badge.textContent = result.exitCode === 0 ? 'OK' : 'Error';
+      } catch (e) {
+        out.textContent = 'Request failed: ' + e.message;
+        out.className   = 'err-out';
+        badge.className = 'badge err';
+        badge.textContent = 'Error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function saveConfig() {
+      const btn = event.currentTarget;
+      await fetch('/save-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url:      document.getElementById('url').value,
+          user:     document.getElementById('user').value,
+          pass:     document.getElementById('pass').value,
+          insecure: document.getElementById('insecure').checked
+        })
+      });
+      const orig = btn.textContent;
+      btn.textContent = 'Saved ✓';
+      setTimeout(() => btn.textContent = orig, 1500);
+    }
+
+    async function stopServer() {
+      await fetch('/shutdown', { method: 'POST' }).catch(() => {});
+      window.close();
+    }
+  </script>
+</body>
+</html>
